@@ -1,0 +1,6 @@
+.venv
+.vscode
+/Part2/flask/__pycache__
+/Part2/http_server/__pycache__
+ЛР-5.code-workspace
+ТЗ.md

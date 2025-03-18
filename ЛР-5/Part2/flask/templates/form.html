@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Форма</title>
+</head>
+<body>
+    <form action="/" method="POST">
+        <label for="login">Логин:</label>
+        <input type="text" id="login" name="login" value="{{ default_login }}" required><br>
+        
+        <label for="time">Текущее время:</label>
+        <input type="text" id="time" name="time" value="{{ current_time }}" readonly><br>
+        
+        <button type="submit">Отправить</button>
+    </form>
+</body>
+</html>
