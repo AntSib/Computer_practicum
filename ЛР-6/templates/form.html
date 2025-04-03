@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Send image
+{% endblock %}
+
+{% block content_title %}
+  Send image
+{% endblock %}
+
+
+{% block content %}
+<div class="col-md-5">
+    <form method=post enctype=multipart/form-data>
+        <input type="file" name="file" class="form-control">
+        <button type="submit" class="btn btn-success">Отправить</button>
+    </form>
+</div>
+{% endblock %}
