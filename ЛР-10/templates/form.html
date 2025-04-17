@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Send width and height
+{% endblock %}
+
+{% block content_title %}
+  Send width and height
+{% endblock %}
+
+
+{% block content %}
+<div class="col-md-5">
+    <form id="imageForm">
+      {{ form.width(class_="form-control") }}
+      {{ form.height(class_="form-control") }}
+      {{ form.submit(class_="btn btn-success") }}
+    </form>
+    <h2 id="resp"></h2>
+    <img id="resultImage" scr="" class="img-thumbnail">
+</div>
+
+<script>
+  document.getElementById('imageForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const width = formData.get('width');
+    const height = formData.get('height');
+    const response = await fetch('/sendimage', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ width, height })
+    });
+    
+    const data = await response.json();
+    if (data.image != undefined) {
+      document.getElementById('resultImage').src = data.image;
+      const resp = document.getElementById('resp')
+      resp.textContent = "Here is our image"
+    }
+  });
+</script>
+
+{% endblock %}
