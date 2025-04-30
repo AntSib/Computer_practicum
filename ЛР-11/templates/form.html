@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Decypher
+{% endblock %}
+
+{% block content_title %}
+  Send key and secret to decypher
+{% endblock %}
+
+
+{% block content %}
+<div class="col-md-5">
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/login">Login</a></li>
+      <li><a href="/Encypher">Encypher</a></li>
+    </ul>
+    <form id="imageForm">
+      <div class="mb-3">
+        {{ form.key.label(class_="form-label") }}
+        {{ form.key(class_="form-control") }}
+      </div>
+      <div class="mb-3">
+        {{ form.secret.label(class_="form-label") }}
+        {{ form.secret(class_="form-control") }}
+      </div>
+      {{ form.submit(class_="btn btn-success") }}
+    </form>
+    <h2 id="resp"></h2>
+    <p id="response"></p>
+    <!-- <img id="resultImage" scr="" class="img-thumbnail"> -->
+</div>
+
+<script>
+  document.getElementById('imageForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const key = formData.get('key');
+    const secret = formData.get('secret');
+    const response = await fetch('/decypher', {
+      method: 'POST',
+      // headers: {
+      //   'Content-Type': 'application/json'
+      // },
+      body: new FormData(event.target)
+    });
+    
+    const data = await response.json();
+    if (data.message != undefined) {
+      const resp = document.getElementById('resp');
+      resp.textContent = "Here is decoded message";
+      const response = document.getElementById('response');
+      response.textContent = data.message;
+    }
+  });
+</script>
+
+{% endblock %}
