@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project id="fc938757-d66a-474c-9268-387144d6f4a1" activeEnvironment="Default" name="Fake Store API" resourceRoot="" soapui-version="5.8.0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings/>
+  <con:interface xsi:type="con:RestService" id="6718ced1-2e1d-408c-af54-e6a5d4beb459" wadlVersion="http://wadl.dev.java.net/2009/02" name="https://fakestoreapi.com" type="rest" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <con:settings/>
+    <con:definitionCache/>
+    <con:endpoints>
+      <con:endpoint>https://fakestoreapi.com</con:endpoint>
+    </con:endpoints>
+    <con:resource name="products" path="/products" id="99d39923-8bfb-447c-b988-8eb32a944b22">
+      <con:settings/>
+      <con:parameters/>
+      <con:method name="Products" id="8aedbf4d-43dd-4bfd-a98f-6adda82b5b9d" method="GET">
+        <con:settings/>
+        <con:parameters/>
+        <con:representation type="RESPONSE">
+          <con:mediaType>application/json; charset=utf-8</con:mediaType>
+          <con:status>200</con:status>
+          <con:params/>
+          <con:element>Response</con:element>
+        </con:representation>
+        <con:request name="Request 1" id="45d5e642-21d4-4085-b6f9-e521e87e0903" mediaType="application/json">
+          <con:settings/>
+          <con:endpoint>https://fakestoreapi.com</con:endpoint>
+          <con:request/>
+          <con:credentials>
+            <con:authType>No Authorization</con:authType>
+          </con:credentials>
+          <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+          <con:jmsPropertyConfig/>
+          <con:parameters/>
+        </con:request>
+      </con:method>
+    </con:resource>
+    <con:resource name="Produts by id" path="/products/${#TestCase#CurrentProductId}" id="f7ffaf76-be17-4023-ab36-66a1d76b334e">
+      <con:settings/>
+      <con:parameters/>
+      <con:method name="Product by id" id="83cf8958-bee2-47de-b809-962c28ec130d" method="GET">
+        <con:settings/>
+        <con:parameters/>
+        <con:request name="Request 1" id="b225a06d-5dca-4480-9a53-b5f87cd2e19b" mediaType="application/json">
+          <con:settings/>
+          <con:endpoint>https://fakestoreapi.com</con:endpoint>
+          <con:request/>
+          <con:credentials>
+            <con:authType>No Authorization</con:authType>
+          </con:credentials>
+          <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+          <con:jmsPropertyConfig/>
+          <con:parameters/>
+          <con:parameterOrder/>
+        </con:request>
+      </con:method>
+    </con:resource>
+  </con:interface>
+  <con:testSuite id="4e799384-385e-4fba-a42c-9e8481bebacc" name="FakeStore TestSuite">
+    <con:description>TestSuite generated for REST Service [https://fakestoreapi.com]</con:description>
+    <con:settings/>
+    <con:runType>SEQUENTIAL</con:runType>
+    <con:testCase id="6921b068-05b6-47e3-8f98-529df94d2bca" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="Fake Store TestCase" searchProperties="true">
+      <con:settings/>
+      <con:testStep type="restrequest" name="GetProducts" id="11ef01ac-3c81-460f-b1f5-b0fef2449665">
+        <con:settings/>
+        <con:config service="https://fakestoreapi.com" resourcePath="/products" methodName="Products" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:restRequest name="products" id="45d5e642-21d4-4085-b6f9-e521e87e0903" mediaType="application/json">
+            <con:settings>
+              <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+            </con:settings>
+            <con:endpoint>https://fakestoreapi.com</con:endpoint>
+            <con:request/>
+            <con:originalUri>https://fakestoreapi.com/products</con:originalUri>
+            <con:credentials>
+              <con:authType>No Authorization</con:authType>
+            </con:credentials>
+            <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+            <con:jmsPropertyConfig/>
+            <con:parameters/>
+          </con:restRequest>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="groovy" name="ExtractProductIds" id="0c2669cd-1077-4224-87d9-8d8c8402d785">
+        <con:settings/>
+        <con:config>
+          <script>import groovy.json.JsonSlurper
+
+def response = context.expand('${GetProducts#Response}')
+def json = new JsonSlurper().parseText(response)
+
+def ids = json.collect { it.id }.take(10)
+
+context.testCase.setPropertyValue("ProductIds", ids.join(','))
+context.testCase.setPropertyValue("ProductIndex", "0")
+
+log.info "${ids}"</script>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="groovy" name="LoopController" id="f209ba39-8a88-4071-893e-00d35d010256">
+        <con:settings/>
+        <con:config>
+          <script>def ids = context.testCase.getPropertyValue("ProductIds").split(',')
+def index = context.testCase.getPropertyValue("ProductIndex") as int
+
+if (index &lt; ids.size()) {
+    def currentId = ids[index]
+    context.testCase.setPropertyValue("CurrentProductId", currentId)
+    testRunner.gotoStepByName("GetProductDetails")
+} else {
+    testRunner.gotoStepByName("END")
+}</script>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="restrequest" name="GetProductDetails" id="ae183698-61ac-4b2e-a8f4-9e42bb3d5b1c">
+        <con:settings/>
+        <con:config service="https://fakestoreapi.com" resourcePath="/products/${#TestCase#CurrentProductId}" methodName="Product by id" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:restRequest name="Method 1 - Request 1" id="b225a06d-5dca-4480-9a53-b5f87cd2e19b" mediaType="application/json">
+            <con:settings/>
+            <con:endpoint>https://fakestoreapi.com</con:endpoint>
+            <con:request/>
+            <con:originalUri>https://fakestoreapi.com/products/1</con:originalUri>
+            <con:credentials>
+              <con:authType>No Authorization</con:authType>
+            </con:credentials>
+            <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+            <con:jmsPropertyConfig/>
+            <con:parameters/>
+            <con:parameterOrder/>
+          </con:restRequest>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="groovy" name="ValidateProduct" id="8d22443b-42ba-4c50-a698-c10ddea3e644">
+        <con:settings/>
+        <con:config>
+          <script>import groovy.json.JsonSlurper
+
+def response = context.expand('${GetProductDetails#Response}')
+def json = new JsonSlurper().parseText(response)
+
+assert json.id.toString() == context.expand('${#TestCase#CurrentProductId}')
+assert json.title
+assert json.price instanceof Number
+assert json.category
+assert json.rating.rate instanceof Number
+assert json.rating.count instanceof Number
+
+log.info "Everything OK"
+
+def i = context.testCase.getPropertyValue("ProductIndex") as int
+context.testCase.setPropertyValue("ProductIndex", (i + 1).toString())
+testRunner.gotoStepByName("LoopController")</script>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="groovy" name="END" id="69242b49-7623-4fec-859e-ece7ee59baac">
+        <con:settings/>
+        <con:config>
+          <script/>
+        </con:config>
+      </con:testStep>
+      <con:properties>
+        <con:property>
+          <con:name>ProductIds</con:name>
+          <con:value>1,2,3,4,5,6,7,8,9,10</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ProductIndex</con:name>
+          <con:value>10</con:value>
+        </con:property>
+        <con:property>
+          <con:name>CurrentProductId</con:name>
+          <con:value>10</con:value>
+        </con:property>
+      </con:properties>
+    </con:testCase>
+    <con:properties/>
+  </con:testSuite>
+  <con:properties/>
+  <con:wssContainer/>
+  <con:oAuth2ProfileContainer/>
+  <con:oAuth1ProfileContainer/>
+</con:soapui-project>
