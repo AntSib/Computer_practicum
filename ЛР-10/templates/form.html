@@ -14,6 +14,7 @@
     <form id="imageForm">
       {{ form.width(class_="form-control") }}
       {{ form.height(class_="form-control") }}
+      {{ form.text(class_="form-control") }}
       {{ form.submit(class_="btn btn-success") }}
     </form>
     <h2 id="resp"></h2>
@@ -26,12 +27,13 @@
     const formData = new FormData(event.target);
     const width = formData.get('width');
     const height = formData.get('height');
+    const text = formData.get('text');
     const response = await fetch('/sendimage', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ width, height })
+      body: JSON.stringify({ width, height, text })
     });
     
     const data = await response.json();

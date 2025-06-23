@@ -30,11 +30,12 @@ def sendimage():
 
         width: int = int(request.json['width'])
         height: int = int(request.json['height'])
+        text: str = request.json['text']
 
         img = Image.new('RGB', (width, height), (0, 0, 0))
         d = ImageDraw.Draw(img)
 
-        d.text((width / 2, height / 2), "Hello World", fill=(255, 255, 255))
+        d.text((width / 2.5, height / 2), text, fill=(255, 255, 255))
 
         buffer = io.BytesIO()
         img.save(buffer, format='JPEG')
