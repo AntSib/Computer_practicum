@@ -1,4 +1,6 @@
 .vscode
+.gitignore
+/Object Storage
 /TG_bot
 /tmp
 /WebAssembly
@@ -6,3 +8,12 @@
 /ЛР-2
 /ЛР-3
 /ЛР-6/ТЗ.md
+
+/ЛР-11
+/ЛР-14
+/ЛР-16
+/ЛР-18
+/ЛР-19
+/ЛР-20
+
+ЛР.ПР.code-workspace
