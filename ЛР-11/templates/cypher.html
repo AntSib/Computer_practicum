@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Encyptor
+{% endblock %}
+
+{% block content_title %}
+  Send key and secret to encypher
+{% endblock %}
+
+
+{% block content %}
+<div class="col-md-5">
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/login">Login</a></li>
+      <li><a href="/decypher">Decryptor</a></li>
+    </ul>
+    
+    <h1>Текст для шифровки</h1>
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+
+        <div class="form-floating">
+            {{ form.text(class_="form-control", id="floatingTextarea", placeholder="Ваш супер секретный текст") }}
+        </div>
+        <div class="mb-3", style="margin-top: 10px;">
+        <p>{{ form.submit(class_="btn btn-success") }}</p>
+        </div>
+    </form>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul>
+        {% for category, message in messages %}
+          <li><strong>{{ category }}:</strong> {{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+</div>
+
+{% endblock %}

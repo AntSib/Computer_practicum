@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Decryptor
+{% endblock %}
+
+{% block content_title %}
+  Send key and secret to decypher
+{% endblock %}
+
+
+{% block content %}
+<div class="col-md-5">
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/login">Login</a></li>
+      <li><a href="/cypher">Cypher</a></li>
+    </ul>
+    
+    <h1>Загрузка файлов ключей</h1>
+    <form id="decypher-form" method="POST" enctype="multipart/form-data" action="/decypher_worker">
+        {{ form.hidden_tag() }}
+
+        <div class="mb-3">
+            {{ form.key.label(class_="form-label") }}<br>
+            {{ form.key(class_="form-control") }}
+        </div>
+        <div class="mb-3">
+            {{ form.secret.label(class_="form-label") }}<br>
+            {{ form.secret(class_="form-control") }}
+        </div>
+        <div class="mb-3" style="margin-top: 10px;">
+            <p>{{ form.submit(class_="btn btn-success") }}</p>
+        </div>
+    </form>
+    <p id="result" class="alert alert-info" style="display: none;"></p>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul>
+        {% for category, message in messages %}
+          <li><strong>{{ category }}:</strong> {{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+</div>
+
+<script>
+document.getElementById('decypher-form').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const formData = new FormData(form);
+
+    const resultElement = document.getElementById('result');
+    resultElement.style.display = 'none';
+    resultElement.textContent = '';
+
+    try {
+        const response = await fetch(form.action, {
+            method: 'POST',
+            body: formData
+        });
+
+        const data = await response.json();
+
+        resultElement.textContent = data.result;
+        resultElement.style.display = 'block';
+        resultElement.classList.remove('alert-danger');
+        resultElement.classList.add('alert-info');
+
+        if (!response.ok) {
+            resultElement.classList.remove('alert-info');
+            resultElement.classList.add('alert-danger');
+        }
+    } catch (err) {
+        resultElement.textContent = 'Ошибка при отправке формы';
+        resultElement.style.display = 'block';
+        resultElement.classList.remove('alert-info');
+        resultElement.classList.add('alert-danger');
+    }
+});
+</script>
+
+
+{% endblock %}
