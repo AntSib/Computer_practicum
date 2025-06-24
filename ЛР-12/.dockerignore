@@ -1,0 +1,6 @@
+environment
+misc
+.venv
+*.zip
+.gitignore
+secret.txt
