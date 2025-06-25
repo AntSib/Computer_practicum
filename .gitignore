@@ -1,10 +1,8 @@
-.vscode
-.gitignore
+.*
+
 /TG_bot
 /tmp
 /Yandex Serverless
-
-/ЛР-6/ТЗ.md
 
 /ЛР-14
 /ЛР-18
