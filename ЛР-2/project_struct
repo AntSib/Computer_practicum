@@ -1,0 +1,10 @@
+vite_portfolio_demo/
+├── src/
+│   ├── js/
+│   │   └── main.js
+│   └── scss/
+│   |   └── styles.scss
+|   └── index.html
+├── package-lock.json
+├── package.json
+└── vite.config.js
